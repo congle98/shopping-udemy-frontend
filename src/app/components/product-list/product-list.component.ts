@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {GetResponseProducts, ProductService} from "../../services/product.service";
 import {Product} from "../../common/product";
 import {ActivatedRoute} from "@angular/router";
+import {CartItem} from "../../common/cart-item";
+import {CartService} from "../../services/cart.service";
 
 @Component({
   selector: 'app-product-list',
@@ -17,7 +19,8 @@ export class ProductListComponent implements OnInit {
   thePageSize:number = 8;
   theTotalElements: number = 0;
   previousKeyWord: string|null;
-  constructor(private productService:ProductService,private route:ActivatedRoute) { }
+  constructor(private productService:ProductService,private route:ActivatedRoute,
+              private cartService:CartService) { }
 
   ngOnInit(): void {
     //theo dõi thay đổi của url
@@ -80,7 +83,8 @@ export class ProductListComponent implements OnInit {
   }
 
   addToCart(product:Product){
-    console.log(product)
+    const cartItem:CartItem = new CartItem(product);
+    this.cartService.addToCart(cartItem);
   }
 
 }

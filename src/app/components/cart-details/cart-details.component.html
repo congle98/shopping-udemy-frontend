@@ -1,0 +1,63 @@
+<div class="main-content">
+  <div class="section-content section-content-p30">
+    <div class="container-fluid">
+      <div *ngIf="cartItems.length>0">
+        <table class="table table-bordered table-sm">
+          <tr>
+            <th width="20%">Product Image</th>
+            <th width="50%">Product Detail</th>
+            <th width="30%"></th>
+          </tr>
+          <tr *ngFor="let cartItem of cartItems">
+            <td><img class="img-responsive" src="{{cartItem.imageUrl}}"
+                     width="150px"></td>
+            <td>
+              <p>{{cartItem.name}}</p>
+              <p>{{cartItem.unitPrice|currency:"USD"}}</p>
+            </td>
+            <td>
+              <div class="items">
+                <label style="font-weight: 700">Quantity </label>
+                <div class="row no-gutters">
+                  <div class="col">
+                    <button (click)="incrementQuantity(cartItem)" class="btn btn-primary btn-sm">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                  <div class="col ml-4 mr-2">
+                    {{cartItem.quantity}}
+                  </div>
+                  <div class="col">
+                    <button (click)="decrementQuantity(cartItem)" class="btn btn-primary btn-sm">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </div>
+                  <div class="col-8">
+
+                  </div>
+                </div>
+              </div>
+              <button style="background-color: #0B60DB" class="btn btn-primary btn-sm" (click)="remove(cartItem)">Remove</button>
+              <p>Sub-total {{cartItem.unitPrice*cartItem.quantity|currency:"USD"}}</p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"></td>
+            <td style="font-weight: bold"><b>Total Quantity: {{totalQuantity}}</b>
+              <p>Shipping FREE</p>
+              <b>Total Price: {{totalPrice|currency:"USD"}}</b><br>
+              <button style="background-color: #0B60DB"  class="btn btn-primary" routerLink="/checkout">Checkout</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div *ngIf="cartItems.length===0" >
+        <div class="alert alert-warning col-md-2" role="alert">
+          Your shopping cart is empty !
+        </div>
+        <button class="btn btn-primary" routerLink="/products">Back To Products</button>
+      </div>
+    </div>
+  </div>
+</div>
+
