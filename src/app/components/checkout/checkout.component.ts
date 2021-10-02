@@ -32,35 +32,54 @@ export class CheckoutComponent implements OnInit {
           // firstName: [""],
           // lastName: [""],
           // email: [""]
-          firstName: new FormControl("",[Validators.required,Validators.minLength(2),Luv2ShopValidators.notOnlyWhitespace]),
-          lastName:  new FormControl("",[Validators.required,Validators.minLength(2),Luv2ShopValidators.notOnlyWhitespace]),
-          email:  new FormControl("",[Validators.required,Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")])
+          firstName: new FormControl(
+            "",[Validators.required,Validators.minLength(2),Luv2ShopValidators.notOnlyWhitespace]),
+          lastName:  new FormControl(
+            "",[Validators.required,Validators.minLength(2),Luv2ShopValidators.notOnlyWhitespace]),
+          email:  new FormControl(
+            "",[Validators.required,Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")])
         }),
       shippingAddress: this.formBuilder.group(
         {
-          street: [""],
-          city: [""],
-          state: [""],
-          country: [""],
-          zipcode: [""],
+          street: new FormControl(
+            "",[Validators.required,Validators.minLength(2),Luv2ShopValidators.notOnlyWhitespace]),
+          city: new FormControl(
+            "",[Validators.required,Validators.minLength(2),Luv2ShopValidators.notOnlyWhitespace]),
+          state: new FormControl(
+            "",[Validators.required]),
+          country: new FormControl(
+            "",[Validators.required]),
+          zipcode: new FormControl(
+            "",[Validators.required,Validators.minLength(2),Luv2ShopValidators.notOnlyWhitespace]),
         }
       ),
       billingAddress: this.formBuilder.group(
         {
-          street: [""],
-          city: [""],
-          state: [""],
-          country: [""],
-          zipcode: [""],
+          street: new FormControl(
+            "",[Validators.required,Validators.minLength(2),Luv2ShopValidators.notOnlyWhitespace]),
+          city: new FormControl(
+            "",[Validators.required,Validators.minLength(2),Luv2ShopValidators.notOnlyWhitespace]),
+          state: new FormControl(
+            "",[Validators.required]),
+          country: new FormControl(
+            "",[Validators.required]),
+          zipcode: new FormControl(
+            "",[Validators.required,Validators.minLength(2),Luv2ShopValidators.notOnlyWhitespace]),
         }),
       creditCard: this.formBuilder.group(
         {
-          cartType: [""],
-          nameOnCard: [""],
-          cardNumber: [""],
-          securityCode: [""],
-          expirationMonth: [""],
-          expirationYear: [""]
+          cartType: new FormControl(
+            "",[Validators.required]),
+          nameOnCard: new FormControl(
+            "",[Validators.required,Validators.minLength(2),Luv2ShopValidators.notOnlyWhitespace]),
+          cardNumber: new FormControl(
+            "",[Validators.required,Validators.pattern("[0-9]{16}")]),
+          securityCode: new FormControl(
+            "",[Validators.required,Validators.pattern("[0-9]{16}")]),
+          expirationMonth: new FormControl(
+            ""),
+          expirationYear:new FormControl(
+            ""),
         })
     })
     const startMonth: number = new Date().getMonth() + 1;
@@ -85,6 +104,59 @@ export class CheckoutComponent implements OnInit {
   get email(){
     return this.checkoutFormGroup.get("customer.email");
   }
+  get shippingAddressStreet(){
+    return this.checkoutFormGroup.get("shippingAddress.street");
+  }
+  get shippingAddressCity(){
+    return this.checkoutFormGroup.get("shippingAddress.city");
+  }
+  get shippingAddressState(){
+    return this.checkoutFormGroup.get("shippingAddress.state");
+  }
+  get shippingAddressCountry(){
+    return this.checkoutFormGroup.get("shippingAddress.country");
+  }
+
+  get shippingAddressZipcode(){
+    return this.checkoutFormGroup.get("shippingAddress.zipcode");
+  }
+  get billingAddressStreet(){
+    return this.checkoutFormGroup.get("billingAddress.street");
+  }
+  get billingAddressCity(){
+    return this.checkoutFormGroup.get("billingAddress.city");
+  }
+  get billingAddressState(){
+    return this.checkoutFormGroup.get("billingAddress.state");
+  }
+  get billingAddressCountry(){
+    return this.checkoutFormGroup.get("billingAddress.country");
+  }
+
+  get billingAddressZipcode(){
+    return this.checkoutFormGroup.get("billingAddress.zipcode");
+  }
+  get creditCardType(){
+    return this.checkoutFormGroup.get("creditCard.cartType");
+  }
+  get creditCardNameOnCard(){
+    return this.checkoutFormGroup.get("creditCard.nameOnCard");
+  }
+  get creditCardCardNumber(){
+    return this.checkoutFormGroup.get("creditCard.cardNumber");
+  }
+  get creditCardSecurityCode(){
+    return this.checkoutFormGroup.get("creditCard.securityCode");
+  }
+  get creditCardExpirationMonth(){
+    return this.checkoutFormGroup.get("creditCard.expirationMonth");
+  }
+  get creditCardExpirationYear(){
+    return this.checkoutFormGroup.get("creditCard.expirationYear");
+  }
+
+
+
 
   onSubmit() {
     //xịn luôn
