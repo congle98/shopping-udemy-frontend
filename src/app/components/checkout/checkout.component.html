@@ -272,7 +272,7 @@
                 <input formControlName="securityCode" type="text" placeholder="SecurityCode">
                 <div *ngIf="creditCardSecurityCode">
                   <div *ngIf="creditCardSecurityCode.invalid && (creditCardSecurityCode.dirty||creditCardSecurityCode.touched)" class="alert alert-danger mt-1">
-                    <div *ngIf="creditCardSecurityCode.errors?.required">
+                    <div *ngIf="creditCardSecurityCode.errors?.req  uired">
                       SecurityCode is required
                     </div>
                     <div *ngIf="creditCardSecurityCode.errors?.pattern">
