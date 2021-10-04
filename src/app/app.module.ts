@@ -15,7 +15,7 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { LoginComponent } from './components/login/login.component';
 import { LoginStatusComponent } from './components/login-status/login-status.component';
-import * as myAppConfig from "./config/my-app-config";
+import myAppConfig from "./config/my-app-config";
 import {
   OKTA_CONFIG,
   OktaAuthModule,
@@ -26,7 +26,7 @@ const oktaConfig = Object.assign({
     const router = injector.get(Router);
     router.navigate(["/login"])
   }
-},myAppConfig)
+},myAppConfig.oidc)
 const routes:Routes = [
   {
     path:"login/callback",
@@ -104,7 +104,6 @@ const routes:Routes = [
     useValue:oktaConfig
   }
   ],
-  bootstrap: [AppComponent],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -9,7 +9,14 @@ export class CartService {
   cartItems : CartItem[] = [];
   totalPrice: Subject<number> = new BehaviorSubject<number>(0);
   totalQuantity:Subject<number> = new BehaviorSubject<number>(0);
-  constructor() { }
+  storage:Storage = localStorage;
+  constructor() {
+    let data = JSON.parse(<any>this.storage.getItem('cartItems'))
+    if(data!=null){
+      this.cartItems = data;
+      this.computeCartTotals()
+    }
+  }
 
   addToCart(theCartItem:CartItem){
     let alreadyExistsInCart:boolean = false;
@@ -34,6 +41,7 @@ export class CartService {
       this.cartItems.push(theCartItem);
     }
     this.computeCartTotals();
+
   }
 
   computeCartTotals(){
@@ -46,6 +54,7 @@ export class CartService {
     this.totalPrice.next(totalPriceValue);
     this.totalQuantity.next(totalQuantityValue);
     // this.logCartData(totalPriceValue,totalQuantityValue);
+    this.persistCartItems();
   }
   logCartData(totalPriceValue:number,totalQuantityValue:number){
     console.log("giở hàng");
@@ -55,7 +64,6 @@ export class CartService {
     }
     console.log("totalPrice "+totalPriceValue.toFixed(2),"totalQuantity "+totalQuantityValue)
     console.log("........");
-
   }
 
   decrementQuantity(cartItem: CartItem) {
@@ -67,6 +75,9 @@ export class CartService {
       this.computeCartTotals();
     }
   }
+  persistCartItems(){
+    this.storage.setItem('cartItems',JSON.stringify(this.cartItems));
+  }
 
   remove(cartItem: CartItem) {
     const index = this.cartItems.findIndex(tempCartItem => tempCartItem.id === cartItem.id);
@@ -74,6 +85,5 @@ export class CartService {
       this.cartItems.splice(index,1);
       this.computeCartTotals();
     }
-
   }
 }
