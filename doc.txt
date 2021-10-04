@@ -4,3 +4,4 @@
 Thêm bootstrapvà @ng-bootstrap/ng-bootstrapphụ thuộc từ npm
 Cài đặt @angular/localizepolyfill
 phân trang bằng ng-bootstrap
+dùng okta để auth

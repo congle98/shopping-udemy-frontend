@@ -117,7 +117,7 @@
           </div>
           <div class="col-md-12">
             <div class="input-space">
-              <input formControlName="zipcode" type="text" placeholder="Zip Code / Postal Code">
+              <input formControlName="zipCode" type="text" placeholder="Zip Code / Postal Code">
               <div *ngIf="shippingAddressZipcode">
                 <div *ngIf="shippingAddressZipcode.invalid && (shippingAddressZipcode.dirty||shippingAddressZipcode.touched)" class="alert alert-danger mt-1">
                   <div *ngIf="shippingAddressZipcode.errors?.required||shippingAddressZipcode.errors?.Whitespace">
@@ -203,7 +203,7 @@
             </div>
             <div class="col-md-12">
               <div class="input-space">
-                <input formControlName="zipcode" type="text" placeholder="Zip Code / Postal Code">
+                <input formControlName="zipCode" type="text" placeholder="Zip Code / Postal Code">
                 <div *ngIf="billingAddressZipcode">
                   <div *ngIf="billingAddressZipcode.invalid && (billingAddressZipcode.dirty||billingAddressZipcode.touched)" class="alert alert-danger mt-1">
                     <div *ngIf="billingAddressZipcode.errors?.required||billingAddressZipcode.errors?.Whitespace">
@@ -272,7 +272,7 @@
                 <input formControlName="securityCode" type="text" placeholder="SecurityCode">
                 <div *ngIf="creditCardSecurityCode">
                   <div *ngIf="creditCardSecurityCode.invalid && (creditCardSecurityCode.dirty||creditCardSecurityCode.touched)" class="alert alert-danger mt-1">
-                    <div *ngIf="creditCardSecurityCode.errors?.req  uired">
+                    <div *ngIf="creditCardSecurityCode.errors?.required">
                       SecurityCode is required
                     </div>
                     <div *ngIf="creditCardSecurityCode.errors?.pattern">

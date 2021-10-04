@@ -5,6 +5,12 @@ import {Country} from "../../common/country";
 import {State} from "../../common/state";
 import {Luv2ShopValidators} from "../../validators/luv2-shop-validators";
 import {CartService} from "../../services/cart.service";
+import {CheckoutService} from "../../services/checkout.service";
+import {Router} from "@angular/router";
+import {Customer} from "../../common/customer";
+import {Order} from "../../common/order";
+import {OrderItem} from "../../common/order-item";
+import {Purchase} from "../../common/purchase";
 
 @Component({
   selector: 'app-checkout',
@@ -23,7 +29,9 @@ export class CheckoutComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private luv2ShopFormService: Luv2ShopFormService,
-              private cartService:CartService
+              private cartService:CartService,
+              private checkoutService:CheckoutService,
+              private router:Router
   ) {
   }
 
@@ -52,7 +60,7 @@ export class CheckoutComponent implements OnInit {
             "",[Validators.required]),
           country: new FormControl(
             "",[Validators.required]),
-          zipcode: new FormControl(
+          zipCode: new FormControl(
             "",[Validators.required,Validators.minLength(2),Luv2ShopValidators.notOnlyWhitespace]),
         }
       ),
@@ -66,7 +74,7 @@ export class CheckoutComponent implements OnInit {
             "",[Validators.required]),
           country: new FormControl(
             "",[Validators.required]),
-          zipcode: new FormControl(
+          zipCode: new FormControl(
             "",[Validators.required,Validators.minLength(2),Luv2ShopValidators.notOnlyWhitespace]),
         }),
       creditCard: this.formBuilder.group(
@@ -78,7 +86,7 @@ export class CheckoutComponent implements OnInit {
           cardNumber: new FormControl(
             "",[Validators.required,Validators.pattern("[0-9]{16}")]),
           securityCode: new FormControl(
-            "",[Validators.required,Validators.pattern("[0-9]{16}")]),
+            "",[Validators.required,Validators.pattern("[0-9]{3}")]),
           expirationMonth: new FormControl(
             ""),
           expirationYear:new FormControl(
@@ -166,11 +174,49 @@ export class CheckoutComponent implements OnInit {
     // console.log(this.checkoutFormGroup.get("customer")?.value);
     //
     // console.log(this.checkoutFormGroup.get("customer")?.value.lastName);
-
     if(this.checkoutFormGroup.invalid){
       //nếu form còn lỗi validate thì sẽ tự động touched để thông báo tất cả các lỗi
       this.checkoutFormGroup.markAllAsTouched();
+      return;
     }
+    let order:Order = new Order();
+    order.totalPrice = this.totalPrice;
+    order.totalQuantity = this.totalQuantity;
+    const cartItems = this.cartService.cartItems;
+    // let orderItems:OrderItem[] = [];
+    // for (let i = 0; i < cartItems.length; i++) {
+    //   // let orderItem = new OrderItem(cartItems[i]);
+    //   // orderItems.push(orderItem);
+    //   //hoặc ntn đỉnh vcll :V
+    //   orderItems[i]= new OrderItem(cartItems[i]);
+    // }
+    //hoặc ntn nè
+    let orderItemsShort: OrderItem[] = cartItems.map(item => new OrderItem(item));
+
+    let purchase = new Purchase();
+    purchase.customer = this.checkoutFormGroup.controls['customer'].value;
+    //shipping
+    purchase.shippingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
+    console.log(purchase.shippingAddress);
+    const shippingState:State = JSON.parse(JSON.stringify(purchase.shippingAddress.state))
+    const shippingCountry:Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country))
+    purchase.shippingAddress.state = shippingState.name;
+    purchase.shippingAddress.country = shippingCountry.name;
+
+    //billing
+    purchase.billingAddress = this.checkoutFormGroup.controls['billingAddress'].value;
+    const billingState:State = JSON.parse(JSON.stringify(purchase.billingAddress.state))
+    const billingCountry:Country = JSON.parse(JSON.stringify(purchase.billingAddress.country))
+    purchase.billingAddress.state = billingState.name;
+    purchase.billingAddress.country = billingCountry.name;
+
+    purchase.order = order;
+    purchase.orderItems = orderItemsShort;
+    this.checkoutService.placeOrder(purchase).subscribe(data => {
+      alert("đơn hàng có mã "+data.orderTrackingNumber+" đã được gửi thành công");
+      this.resetCart();
+      },
+      error => alert(error.message));
   }
 
   copyShippingAddressToBillingAddress(event: any) {
@@ -213,5 +259,13 @@ export class CheckoutComponent implements OnInit {
   private reviewCartDetail() {
     this.cartService.totalPrice.subscribe(data => this.totalPrice = data);
     this.cartService.totalQuantity.subscribe(data => this.totalQuantity = data);
+  }
+
+  private resetCart() {
+    this.cartService.cartItems =[];
+    this.cartService.totalPrice.next(0);
+    this.cartService.totalQuantity.next(0);
+    this.checkoutFormGroup.reset();
+    this.router.navigateByUrl("/products");
   }
 }

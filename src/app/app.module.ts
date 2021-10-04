@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import {HttpClientModule} from "@angular/common/http";
 import {ProductService} from "./services/product.service";
-import {Routes,RouterModule} from "@angular/router";
+import {Routes, RouterModule, Router} from "@angular/router";
 import { ProductCategoryMenuComponent } from './components/product-category-menu/product-category-menu.component';
 import { SearchComponent } from './components/search/search.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
@@ -13,8 +13,29 @@ import { CartStatusComponent } from './components/cart-status/cart-status.compon
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-
+import { LoginComponent } from './components/login/login.component';
+import { LoginStatusComponent } from './components/login-status/login-status.component';
+import * as myAppConfig from "./config/my-app-config";
+import {
+  OKTA_CONFIG,
+  OktaAuthModule,
+  OktaCallbackComponent,
+} from "@okta/okta-angular";
+const oktaConfig = Object.assign({
+  onAuthRequired:(injector:any)=>{
+    const router = injector.get(Router);
+    router.navigate(["/login"])
+  }
+},myAppConfig)
 const routes:Routes = [
+  {
+    path:"login/callback",
+    component:OktaCallbackComponent
+  },
+  {
+    path:"login",
+    component:LoginComponent
+  },
   {
     path:'category/:id',
     component:ProductListComponent
@@ -63,7 +84,9 @@ const routes:Routes = [
     ProductDetailComponent,
     CartStatusComponent,
     CartDetailsComponent,
-    CheckoutComponent
+    CheckoutComponent,
+    LoginComponent,
+    LoginStatusComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,9 +94,17 @@ const routes:Routes = [
     RouterModule.forRoot(routes),
     NgbModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+      // OktaAuthModule
   ],
-  providers: [ProductService],
-  bootstrap: [AppComponent]
+  providers: [ProductService
+    ,
+    {
+    provide:OKTA_CONFIG,
+    useValue:oktaConfig
+  }
+  ],
+  bootstrap: [AppComponent],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class AppModule { }
